@@ -15,5 +15,5 @@ pub use card::{Card, Enhancement, Edition, Rank, Suit};
 pub use hand::{Hand, HandType};
 pub use joker::Joker;
 pub use scoring::{ScoreCalculator, ScoreResult};
-pub use simulator::Simulator;
+pub use simulator::{create_standard_deck, SimulationConfig, SimulationResult, Simulator};
 pub use solver::Solver;
