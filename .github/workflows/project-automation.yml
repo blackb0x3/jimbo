@@ -37,33 +37,72 @@ jobs:
 
             console.log(`Found linked issues: ${issueNumbers.join(', ')}`);
 
-            // Get project ID
-            const projectQuery = `
-              query($owner: String!, $number: Int!) {
-                user(login: $owner) {
-                  projectV2(number: $number) {
-                    id
-                    field(name: "Status") {
-                      ... on ProjectV2SingleSelectField {
-                        id
-                        options {
+            // Get project ID - try both user and organization
+            let projectId, statusField;
+
+            try {
+              // Try user project first
+              const userProjectQuery = `
+                query($owner: String!, $number: Int!) {
+                  user(login: $owner) {
+                    projectV2(number: $number) {
+                      id
+                      field(name: "Status") {
+                        ... on ProjectV2SingleSelectField {
                           id
-                          name
+                          options {
+                            id
+                            name
+                          }
                         }
                       }
                     }
                   }
                 }
+              `;
+
+              const userProjectData = await github.graphql(userProjectQuery, {
+                owner,
+                number: projectNumber
+              });
+
+              projectId = userProjectData.user.projectV2.id;
+              statusField = userProjectData.user.projectV2.field;
+            } catch (error) {
+              // Try organization project
+              try {
+                const orgProjectQuery = `
+                  query($owner: String!, $number: Int!) {
+                    organization(login: $owner) {
+                      projectV2(number: $number) {
+                        id
+                        field(name: "Status") {
+                          ... on ProjectV2SingleSelectField {
+                            id
+                            options {
+                              id
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                `;
+
+                const orgProjectData = await github.graphql(orgProjectQuery, {
+                  owner,
+                  number: projectNumber
+                });
+
+                projectId = orgProjectData.organization.projectV2.id;
+                statusField = orgProjectData.organization.projectV2.field;
+              } catch (orgError) {
+                console.log(`❌ Could not find project #${projectNumber} for user or org: ${owner}`);
+                return;
               }
-            `;
+            }
 
-            const projectData = await github.graphql(projectQuery, {
-              owner,
-              number: projectNumber
-            });
-
-            const projectId = projectData.user.projectV2.id;
-            const statusField = projectData.user.projectV2.field;
             const inReviewOption = statusField.options.find(opt => opt.name === 'In Review');
 
             if (!inReviewOption) {
@@ -180,33 +219,72 @@ jobs:
 
             console.log(`Found linked issues: ${issueNumbers.join(', ')}`);
 
-            // Get project ID
-            const projectQuery = `
-              query($owner: String!, $number: Int!) {
-                user(login: $owner) {
-                  projectV2(number: $number) {
-                    id
-                    field(name: "Status") {
-                      ... on ProjectV2SingleSelectField {
-                        id
-                        options {
+            // Get project ID - try both user and organization
+            let projectId, statusField;
+
+            try {
+              // Try user project first
+              const userProjectQuery = `
+                query($owner: String!, $number: Int!) {
+                  user(login: $owner) {
+                    projectV2(number: $number) {
+                      id
+                      field(name: "Status") {
+                        ... on ProjectV2SingleSelectField {
                           id
-                          name
+                          options {
+                            id
+                            name
+                          }
                         }
                       }
                     }
                   }
                 }
+              `;
+
+              const userProjectData = await github.graphql(userProjectQuery, {
+                owner,
+                number: projectNumber
+              });
+
+              projectId = userProjectData.user.projectV2.id;
+              statusField = userProjectData.user.projectV2.field;
+            } catch (error) {
+              // Try organization project
+              try {
+                const orgProjectQuery = `
+                  query($owner: String!, $number: Int!) {
+                    organization(login: $owner) {
+                      projectV2(number: $number) {
+                        id
+                        field(name: "Status") {
+                          ... on ProjectV2SingleSelectField {
+                            id
+                            options {
+                              id
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                `;
+
+                const orgProjectData = await github.graphql(orgProjectQuery, {
+                  owner,
+                  number: projectNumber
+                });
+
+                projectId = orgProjectData.organization.projectV2.id;
+                statusField = orgProjectData.organization.projectV2.field;
+              } catch (orgError) {
+                console.log(`❌ Could not find project #${projectNumber} for user or org: ${owner}`);
+                return;
               }
-            `;
+            }
 
-            const projectData = await github.graphql(projectQuery, {
-              owner,
-              number: projectNumber
-            });
-
-            const projectId = projectData.user.projectV2.id;
-            const statusField = projectData.user.projectV2.field;
             const reviewApprovedOption = statusField.options.find(opt => opt.name === 'Review Approved');
 
             if (!reviewApprovedOption) {
