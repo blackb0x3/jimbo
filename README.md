@@ -92,6 +92,7 @@ jimbo simulate [OPTIONS]
 - `--runs <N>` - Number of simulation runs (default: 1000)
 - `--deck <FILE>` - Path to deck configuration file
 - `--jokers <JOKERS>` - Comma-separated list of jokers
+- `--hand-size <N>` - Hand size to draw (default: 8)
 - `--vouchers <VOUCHERS>` - Comma-separated list of vouchers
 - `--blind <TYPE>` - Blind type to simulate against
 - `--seed <SEED>` - Base seed for simulations
@@ -149,10 +150,13 @@ jimbo config <SUBCOMMAND>
 
 ```bash
 # Create a new deck configuration
-jimbo config init --type deck --output my_deck.json
+jimbo config init deck --output my_deck.json
+
+# Create a new game state configuration
+jimbo config init game-state --output my_game.json
 
 # Validate a configuration file
-jimbo config validate --file my_deck.json
+jimbo config validate my_deck.json
 
 # List all saved configurations
 jimbo config list
