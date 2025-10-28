@@ -129,7 +129,7 @@ jobs:
 
                 // Get project item ID for this issue
                 const itemQuery = `
-                  query($projectId: ID!, $issueId: ID!) {
+                  query($projectId: ID!) {
                     node(id: $projectId) {
                       ... on ProjectV2 {
                         items(first: 100) {
@@ -149,8 +149,7 @@ jobs:
                 `;
 
                 const itemsData = await github.graphql(itemQuery, {
-                  projectId,
-                  issueId: issueData.data.node_id
+                  projectId
                 });
 
                 const projectItem = itemsData.node.items.nodes.find(
@@ -311,7 +310,7 @@ jobs:
 
                 // Get project item ID for this issue
                 const itemQuery = `
-                  query($projectId: ID!, $issueId: ID!) {
+                  query($projectId: ID!) {
                     node(id: $projectId) {
                       ... on ProjectV2 {
                         items(first: 100) {
@@ -331,8 +330,7 @@ jobs:
                 `;
 
                 const itemsData = await github.graphql(itemQuery, {
-                  projectId,
-                  issueId: issueData.data.node_id
+                  projectId
                 });
 
                 const projectItem = itemsData.node.items.nodes.find(
