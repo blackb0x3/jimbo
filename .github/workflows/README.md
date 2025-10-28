@@ -13,36 +13,28 @@ The `project-automation.yml` workflow automatically manages issue status in GitH
 
 #### 1. Create a Personal Access Token (PAT)
 
-GitHub Actions' default `GITHUB_TOKEN` cannot access GitHub Projects V2. You need to create a Personal Access Token (fine-grained tokens are recommended):
+GitHub Actions' default `GITHUB_TOKEN` cannot access GitHub Projects V2. You need to create a **Classic Personal Access Token**.
 
-**Option A: Fine-grained Personal Access Token (Recommended)**
+> **⚠️ Important**: Fine-grained Personal Access Tokens do **not** currently support user-owned GitHub Projects V2. They only work with organization-owned projects. Since this project is owned by a user account, you **must** use a classic token.
 
-1. Go to **Settings** → **Developer settings** → **Personal access tokens** → **Fine-grained tokens**
-2. Click **Generate new token**
-3. Configure the token:
-   - **Name**: `Jimbo Project Automation`
-   - **Expiration**: Set to your preference (e.g., 90 days, 1 year, or custom)
-   - **Repository access**: Select "Only select repositories" and choose `jimbo`
-   - **Permissions**:
-     - Repository permissions:
-       - **Issues**: Read and write
-       - **Pull requests**: Read and write
-     - Account permissions:
-       - **Projects**: Read and write
-4. Click **Generate token**
-5. **Copy the token immediately** (you won't be able to see it again)
-
-**Option B: Classic Personal Access Token**
+**Creating a Classic Personal Access Token**
 
 1. Go to **Settings** → **Developer settings** → **Personal access tokens** → **Tokens (classic)**
+   - Direct link: https://github.com/settings/tokens
 2. Click **Generate new token** → **Generate new token (classic)**
-3. Give it a descriptive name: `Jimbo Project Automation`
-4. Select the following scopes:
-   - `project` (Full control of projects)
-   - `repo` (Full control of private repositories) - if your repo is private
-5. Set an appropriate expiration date
-6. Click **Generate token**
-7. **Copy the token immediately** (you won't be able to see it again)
+3. Configure the token:
+   - **Note**: `Jimbo Project Automation`
+   - **Expiration**: Set to your preference (e.g., 90 days, 1 year, or custom)
+   - **Select scopes**:
+     - ✅ `repo` - Full control of private repositories
+     - ✅ `project` - Full control of projects (**required** for Projects V2 access)
+   - **Do not check**: `workflow` (not needed for this automation)
+4. Click **Generate token**
+5. **Copy the token immediately** (starts with `ghp_...`) - you won't be able to see it again
+
+**For Organization-Owned Projects Only**
+
+If your project were owned by an organization (not applicable to this repo), you could use a fine-grained token with organization-level project permissions. For user-owned projects like this one, classic tokens are the only option.
 
 #### 2. Add the Token as a Repository Secret
 
