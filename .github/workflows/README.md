@@ -13,7 +13,26 @@ The `project-automation.yml` workflow automatically manages issue status in GitH
 
 #### 1. Create a Personal Access Token (PAT)
 
-GitHub Actions' default `GITHUB_TOKEN` cannot access GitHub Projects V2. You need to create a Personal Access Token with the `project` scope:
+GitHub Actions' default `GITHUB_TOKEN` cannot access GitHub Projects V2. You need to create a Personal Access Token (fine-grained tokens are recommended):
+
+**Option A: Fine-grained Personal Access Token (Recommended)**
+
+1. Go to **Settings** → **Developer settings** → **Personal access tokens** → **Fine-grained tokens**
+2. Click **Generate new token**
+3. Configure the token:
+   - **Name**: `Jimbo Project Automation`
+   - **Expiration**: Set to your preference (e.g., 90 days, 1 year, or custom)
+   - **Repository access**: Select "Only select repositories" and choose `jimbo`
+   - **Permissions**:
+     - Repository permissions:
+       - **Issues**: Read and write
+       - **Pull requests**: Read and write
+     - Account permissions:
+       - **Projects**: Read and write
+4. Click **Generate token**
+5. **Copy the token immediately** (you won't be able to see it again)
+
+**Option B: Classic Personal Access Token**
 
 1. Go to **Settings** → **Developer settings** → **Personal access tokens** → **Tokens (classic)**
 2. Click **Generate new token** → **Generate new token (classic)**
